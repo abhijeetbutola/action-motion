@@ -60,3 +60,13 @@ const spritesReducer = (
 };
 
 export default spritesReducer;
+
+export const addSprite = (sprite: Sprite): AddSpriteAction => ({
+  type: ADD_SPRITE,
+  payload: sprite,
+});
+
+export const updateSprite = (sprite: Sprite): UpdateSpriteAction => ({
+  type: UPDATE_SPRITE,
+  payload: sprite,
+});

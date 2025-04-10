@@ -1,6 +1,5 @@
-import React from "react";
 import CatSprite from "./CatSprite";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/reducers";
 
 export default function PreviewArea() {
