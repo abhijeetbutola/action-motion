@@ -2,6 +2,7 @@ import Icon from "./Icon";
 import { looksBlocks, motionBlocks } from "../animationBlocks";
 import { useDispatch } from "react-redux";
 import { updateSprite } from "../redux/reducers/spriteReducer";
+import DraggableBlock from "./DraggableBlock";
 
 function Sidebar() {
   const dispatch = useDispatch();
@@ -19,10 +20,7 @@ function Sidebar() {
       </div>
       <div className="font-bold"> {"Motion"} </div>
       {motionBlocks.map((block) => (
-        <div key={block.id} className="flex gap-2">
-          {block.label}
-          {block.icon && <Icon name={block.icon} size={15} />}
-        </div>
+        <DraggableBlock key={block.id} block={block} />
       ))}
       <div className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer">
         {"Move 10 steps"}
@@ -39,10 +37,7 @@ function Sidebar() {
       </div>
       <div className="font-bold">Looks</div>
       {looksBlocks.map((block) => (
-        <div key={block.id}>
-          {block.label}
-          {block.icon && <Icon name={block.icon} size={15} />}
-        </div>
+        <DraggableBlock key={block.id} block={block} />
       ))}
       <button
         onClick={() =>
