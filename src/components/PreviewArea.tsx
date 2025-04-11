@@ -10,15 +10,26 @@ export default function PreviewArea() {
   if (!sprite) return null;
 
   return (
-    <div className="relative flex-none h-full p-2">
+    <div className="relative w-full h-full">
       <div
-        className="absolute transition-transform duration-200 overflow-visible"
+        className="absolute transition-transform duration-500"
         style={{
-          transform: `translate(${sprite.x}px,${sprite.y}px) rotate(${sprite.rotation}deg)`,
+          transform: `translate(${sprite.x}px, ${sprite.y}px) rotate(${sprite.rotation}deg)`,
         }}
       >
         <CatSprite />
       </div>
+      {sprite.speechBubble && (
+        <div
+          className="absolute bg-white border border-gray-400 rounded p-2 text-sm shadow-lg"
+          style={{
+            left: sprite.x + 40,
+            top: sprite.y - 50,
+          }}
+        >
+          {sprite.speechBubble.text}
+        </div>
+      )}
     </div>
   );
 }

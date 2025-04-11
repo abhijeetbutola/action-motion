@@ -1,5 +1,7 @@
+// src/DraggableBlock.tsx
+import React from "react";
 import { useDrag } from "react-dnd";
-import { AnimationBlock } from "../animationBlocks";
+import { AnimationBlock, LabelComponent } from "../animationBlocks"; // Updated file path if needed
 import Icon from "./Icon";
 
 type DraggableBlockProps = {
@@ -19,6 +21,43 @@ function DraggableBlock({ block }: DraggableBlockProps) {
     }),
   }));
 
+  // Render a preview of the block by looping through labelComponents.
+  // For inputs, show the default value (if present) or a placeholder.
+  const renderPreview = () => {
+    return block.labelComponents.map((component: LabelComponent, index) => {
+      switch (component.type) {
+        case "text":
+          return (
+            <span key={index} className="inline-block">
+              {component.value}
+            </span>
+          );
+        case "input":
+          return (
+            <span
+              key={index}
+              className="inline-block border-b border-dotted px-1"
+            >
+              {block.params && block.params[component.key] !== undefined
+                ? block.params[component.key]
+                : "____"}
+            </span>
+          );
+        case "icon":
+          return (
+            <Icon
+              key={index}
+              name={component.name}
+              size={component.size ?? 15}
+              className="inline-block mx-1"
+            />
+          );
+        default:
+          return null;
+      }
+    });
+  };
+
   return (
     <div
       ref={drag}
@@ -26,8 +65,7 @@ function DraggableBlock({ block }: DraggableBlockProps) {
         isDragging ? "opacity-50" : "opacity-100"
       }`}
     >
-      {block.label}
-      {block.icon && <Icon name={block.icon} size={15} />}
+      {renderPreview()}
     </div>
   );
 }

@@ -1,31 +1,55 @@
+// src/animationBlock.ts
+
+export type LabelComponent =
+  | { type: "text"; value: string }
+  | { type: "input"; key: string; inputType?: "text" | "number" }
+  | { type: "icon"; name: string; size?: number };
+
 export interface AnimationBlock {
   id: string;
-  label: string;
+  labelComponents: LabelComponent[];
   params?: { [key: string]: any };
-  icon?: string;
 }
 
+// Motion Blocks
 export const motionBlocks: AnimationBlock[] = [
   {
     id: "moveSteps",
-    label: "Move ____ steps",
+    labelComponents: [
+      { type: "text", value: "Move " },
+      { type: "input", key: "steps", inputType: "number" },
+      { type: "text", value: " steps" },
+    ],
     params: { steps: 10 },
   },
   {
     id: "turnClockWiseDegrees",
-    label: "Turn ____ degrees",
+    labelComponents: [
+      { type: "text", value: "Turn " },
+      { type: "input", key: "degrees", inputType: "number" },
+      { type: "text", value: " degrees" },
+      { type: "icon", name: "redo", size: 15 },
+    ],
     params: { degrees: 90 },
-    icon: "redo",
   },
   {
     id: "turnAntiClockWiseDegrees",
-    label: "Turn ____ degrees",
+    labelComponents: [
+      { type: "text", value: "Turn " },
+      { type: "input", key: "degrees", inputType: "number" },
+      { type: "text", value: " degrees" },
+      { type: "icon", name: "undo", size: 15 },
+    ],
     params: { degrees: 90 },
-    icon: "undo",
   },
   {
     id: "goToXY",
-    label: "Go to x: ___ y: ____",
+    labelComponents: [
+      { type: "text", value: "Go to x: " },
+      { type: "input", key: "x", inputType: "number" },
+      { type: "text", value: " y: " },
+      { type: "input", key: "y", inputType: "number" },
+    ],
     params: { x: 0, y: 0 },
   },
 ];
@@ -33,12 +57,24 @@ export const motionBlocks: AnimationBlock[] = [
 export const looksBlocks: AnimationBlock[] = [
   {
     id: "say",
-    label: "Say ____ for ____ seconds",
+    labelComponents: [
+      { type: "text", value: "Say " },
+      { type: "input", key: "text", inputType: "text" },
+      { type: "text", value: " for " },
+      { type: "input", key: "seconds", inputType: "number" },
+      { type: "text", value: " seconds" },
+    ],
     params: { text: "", seconds: 2 },
   },
   {
     id: "think",
-    label: "Think ____ for ____ seconds",
+    labelComponents: [
+      { type: "text", value: "Think " },
+      { type: "input", key: "text", inputType: "text" },
+      { type: "text", value: " for " },
+      { type: "input", key: "seconds", inputType: "number" },
+      { type: "text", value: " seconds" },
+    ],
     params: { text: "", seconds: 2 },
   },
 ];

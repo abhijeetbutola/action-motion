@@ -41,7 +41,7 @@ function Sidebar() {
       ))}
       <button
         onClick={() =>
-          dispatch(updateSprite({ id: "sprite1", x: 10, y: 20, rotation: 15 }))
+          dispatch(updateSprite({ id: "sprite1", x: 100, y: 0, rotation: 45 }))
         }
       >
         Click me
