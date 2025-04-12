@@ -52,6 +52,15 @@ export const motionBlocks: AnimationBlock[] = [
     ],
     params: { x: 0, y: 0 },
   },
+  {
+    id: "repeat",
+    labelComponents: [
+      { type: "text", value: "Repeat" },
+      { type: "input", key: "times", inputType: "number" },
+      { type: "text", value: "times" },
+    ],
+    params: { times: 2 },
+  },
 ];
 
 export const looksBlocks: AnimationBlock[] = [

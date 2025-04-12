@@ -26,6 +26,7 @@ const ADD_SPRITE = "ADD_SPRITE";
 const UPDATE_SPRITE = "UPDATE_SPRITE";
 const TURN_SPRITE = "TURN_SPRITE";
 const SET_SPEECH_BUBBLE = "SET_SPEECH_BUBBLE";
+const DELETE_SPRITE = "DELETE_SPRITE";
 
 // Action Interfaces
 interface AddSpriteAction {
@@ -51,11 +52,17 @@ interface SetSpeechBubbleAction {
   payload: { id: string; bubble: Sprite["speechBubble"] };
 }
 
+interface DeleteSpriteAction {
+  type: typeof DELETE_SPRITE;
+  payload: { id: string };
+}
+
 type SpritesActionTypes =
   | AddSpriteAction
   | UpdateSpriteAction
   | TurnSpriteAction
-  | SetSpeechBubbleAction;
+  | SetSpeechBubbleAction
+  | DeleteSpriteAction;
 
 // The reducer
 const spritesReducer = (
@@ -108,6 +115,17 @@ const spritesReducer = (
         },
       };
     }
+    case DELETE_SPRITE: {
+      const { id } = action.payload;
+      // Remove sprite from byId
+      const { [id]: removed, ...remaining } = state.byId;
+      // Filter out the id from allIds
+      return {
+        ...state,
+        byId: remaining,
+        allIds: state.allIds.filter((spriteId) => spriteId !== id),
+      };
+    }
     default:
       return state;
   }
@@ -137,4 +155,9 @@ export const setSpeechBubble = (
 ): SetSpeechBubbleAction => ({
   type: SET_SPEECH_BUBBLE,
   payload: { id, bubble },
+});
+
+export const deleteSprite = (id: string): DeleteSpriteAction => ({
+  type: DELETE_SPRITE,
+  payload: { id },
 });

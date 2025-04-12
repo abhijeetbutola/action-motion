@@ -61,7 +61,7 @@ function DraggableBlock({ block }: DraggableBlockProps) {
   return (
     <div
       ref={drag}
-      className={`p-2 bg-blue-500 text-white m-1 rounded cursor-pointer ${
+      className={`p-2 bg-blue-500 text-white m-1 rounded cursor-move ${
         isDragging ? "opacity-50" : "opacity-100"
       }`}
     >
