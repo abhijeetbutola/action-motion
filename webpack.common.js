@@ -3,12 +3,11 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   entry: {
-    app: "./src/index.tsx", // Entry point for your app
+    app: "./src/index.tsx",
   },
   output: {
-    // Do not specify the output directory here.
-    filename: "bundle.js", // This can be overridden in webpack.prod.js for better control
-    publicPath: "/", // This ensures assets are referenced correctly
+    filename: "bundle.js", // Overridden in prod with hashed name
+    publicPath: "/", // Ensures proper routing
   },
   module: {
     rules: [
@@ -17,21 +16,7 @@ module.exports = {
         use: [
           MiniCssExtractPlugin.loader,
           "css-loader",
-          {
-            loader: "postcss-loader",
-            options: {
-              postcssOptions: {
-                plugins: [
-                  [
-                    "postcss-preset-env",
-                    {
-                      // Options
-                    },
-                  ],
-                ],
-              },
-            },
-          },
+          "postcss-loader", // Uses postcss.config.js
         ],
       },
       {
@@ -54,5 +39,9 @@ module.exports = {
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
-  plugins: [new MiniCssExtractPlugin()],
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "[name].css", // Will output app.css in dist/
+    }),
+  ],
 };

@@ -1,5 +1,5 @@
 import { useDrag } from "react-dnd";
-import { AnimationBlock, LabelComponent } from "../animationBlocks"; // Updated file path if needed
+import { AnimationBlock, LabelComponent } from "../animationBlocks";
 import Icon from "./Icon";
 
 type DraggableBlockProps = {
