@@ -4,8 +4,8 @@ import { Sprite } from "../redux/reducers/spriteReducer";
 import DraggableSprite from "./DraggableSprite";
 import { AnimationBlock } from "../animationBlocks";
 import { setActionSet } from "../redux/reducers/editorReducer";
-import { executeAction } from "../utils/executeAction"; // ✅ new helper
-import { AppDispatch } from "../redux/store"; // ✅ correct import
+import { executeAction } from "../utils/executeAction";
+import { AppDispatch } from "../redux/store";
 import { useRef } from "react";
 import Button from "./Button";
 
@@ -27,7 +27,7 @@ function PreviewArea() {
   const sprites = useSelector((state: RootState) => state.sprites.byId);
   const allIds = useSelector((state: RootState) => state.sprites.allIds);
   const actionSets = useSelector((state: RootState) => state.editor.actionSets);
-  const dispatch = useDispatch<AppDispatch>(); // ✅ typed dispatch
+  const dispatch = useDispatch<AppDispatch>();
 
   const runSequenceForSprite = async (
     spriteId: string,
@@ -56,7 +56,6 @@ function PreviewArea() {
       currentY = result.y;
       currentRotation = result.rotation;
 
-      // Collision check
       if (action.id === "moveSteps") {
         for (const otherId of allIds) {
           if (otherId === spriteId) continue;

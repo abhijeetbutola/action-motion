@@ -1,6 +1,5 @@
 import { AnimationBlock } from "../../animationBlocks";
 
-// Action Types
 const SET_SELECTED_SPRITE = "SET_SELECTED_SPRITE";
 const ADD_ACTION_TO_SPRITE = "ADD_ACTION_TO_SPRITE";
 const UPDATE_ACTION_PARAM = "UPDATE_ACTION_PARAM";
@@ -8,7 +7,6 @@ const REMOVE_ACTION_FROM_SPRITE = "REMOVE_ACTION_FROM_SPRITE";
 const RESET_ACTION_SET_FOR_SPRITE = "RESET_ACTION_SET_FOR_SPRITE";
 const SET_ACTION_SET = "SET_ACTION_SET";
 
-// Interfaces
 interface EditorState {
   selectedSpriteId: string | null;
   actionSets: {
@@ -21,7 +19,6 @@ const initialState: EditorState = {
   actionSets: {},
 };
 
-// Action types
 interface SetSelectedSpriteAction {
   type: typeof SET_SELECTED_SPRITE;
   payload: string | null;
@@ -65,7 +62,6 @@ type EditorActionTypes =
   | ResetActionSetForSpriteAction
   | SetActionSetAction;
 
-// Reducer
 const editorReducer = (
   state = initialState,
   action: EditorActionTypes
@@ -151,7 +147,6 @@ const editorReducer = (
 
 export default editorReducer;
 
-// Actions
 export const setSelectedSprite = (
   id: string | null
 ): SetSelectedSpriteAction => ({

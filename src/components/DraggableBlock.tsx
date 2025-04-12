@@ -1,5 +1,3 @@
-// src/DraggableBlock.tsx
-import React from "react";
 import { useDrag } from "react-dnd";
 import { AnimationBlock, LabelComponent } from "../animationBlocks"; // Updated file path if needed
 import Icon from "./Icon";
@@ -21,8 +19,6 @@ function DraggableBlock({ block }: DraggableBlockProps) {
     }),
   }));
 
-  // Render a preview of the block by looping through labelComponents.
-  // For inputs, show the default value (if present) or a placeholder.
   const renderPreview = () => {
     return block.labelComponents.map((component: LabelComponent, index) => {
       switch (component.type) {

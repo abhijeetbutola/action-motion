@@ -38,10 +38,8 @@ const DraggableSprite: React.FC<DraggableSpriteProps> = ({
       end: (item, monitor) => {
         const delta = monitor.getDifferenceFromInitialOffset();
         if (delta) {
-          // Calculate new position by adding delta to the original position.
           const newX = x + delta.x;
           const newY = y + delta.y;
-          // Dispatch an update to Redux with the new coordinates.
           dispatch(updateSprite({ id, x: newX, y: newY, rotation }));
         }
       },

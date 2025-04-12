@@ -1,5 +1,3 @@
-// src/animationBlock.ts
-
 export type LabelComponent =
   | { type: "text"; value: string }
   | { type: "input"; key: string; inputType?: "text" | "number" }
@@ -11,7 +9,6 @@ export interface AnimationBlock {
   params?: { [key: string]: any };
 }
 
-// Motion Blocks
 export const motionBlocks: AnimationBlock[] = [
   {
     id: "moveSteps",

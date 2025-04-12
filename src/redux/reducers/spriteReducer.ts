@@ -1,11 +1,8 @@
-// src/redux/reducers/spriteReducer.ts
-
 export interface Sprite {
   id: string;
   x: number;
   y: number;
-  rotation: number; // Represents the sprite's facing direction (in degrees)
-  // New property: optional speech bubble for say/think actions
+  rotation: number;
   speechBubble?: { text: string; type: "say" | "think" } | null;
 }
 
@@ -21,14 +18,11 @@ const initialState: SpritesState = {
   allIds: ["sprite1"],
 };
 
-// Action types
 const ADD_SPRITE = "ADD_SPRITE";
 const UPDATE_SPRITE = "UPDATE_SPRITE";
 const TURN_SPRITE = "TURN_SPRITE";
 const SET_SPEECH_BUBBLE = "SET_SPEECH_BUBBLE";
 const DELETE_SPRITE = "DELETE_SPRITE";
-
-// Action Interfaces
 interface AddSpriteAction {
   type: typeof ADD_SPRITE;
   payload: Sprite;
@@ -43,7 +37,7 @@ interface TurnSpriteAction {
   type: typeof TURN_SPRITE;
   payload: {
     id: string;
-    delta: number; // Amount (in degrees) to add (or subtract) from the current rotation
+    delta: number;
   };
 }
 
@@ -64,7 +58,6 @@ type SpritesActionTypes =
   | SetSpeechBubbleAction
   | DeleteSpriteAction;
 
-// The reducer
 const spritesReducer = (
   state = initialState,
   action: SpritesActionTypes
@@ -117,9 +110,7 @@ const spritesReducer = (
     }
     case DELETE_SPRITE: {
       const { id } = action.payload;
-      // Remove sprite from byId
       const { [id]: removed, ...remaining } = state.byId;
-      // Filter out the id from allIds
       return {
         ...state,
         byId: remaining,
@@ -133,7 +124,6 @@ const spritesReducer = (
 
 export default spritesReducer;
 
-// Action Creators
 export const addSprite = (sprite: Sprite): AddSpriteAction => ({
   type: ADD_SPRITE,
   payload: sprite,

@@ -4,11 +4,10 @@ import { addSprite, deleteSprite } from "../redux/reducers/spriteReducer";
 import {
   addActionToSprite,
   setSelectedSprite,
-} from "../redux/reducers/editorReducer"; // 👈 import
+} from "../redux/reducers/editorReducer";
 import CatSprite from "./CatSprite";
 import { useEffect } from "react";
 
-// Helper to create a new sprite.
 const createNewSprite = (): any => ({
   id: `sprite-${Date.now()}`,
   x: 0,
@@ -38,7 +37,6 @@ function SpritePanel() {
     dispatch(addSprite(newSprite));
     dispatch(setSelectedSprite(newSprite.id));
 
-    // Copy action set from the first sprite (if exists)
     if (allIds.length > 0) {
       const firstId = allIds[0];
       const clonedActions =
