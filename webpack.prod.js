@@ -1,6 +1,7 @@
 const { merge } = require("webpack-merge");
 const common = require("./webpack.common.js");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const path = require("path");
 
 process.env["NODE_ENV"] = "production";
 
@@ -15,6 +16,11 @@ module.exports = merge([
         // `...`,
         new CssMinimizerPlugin(),
       ],
+    },
+    output: {
+      path: path.resolve(__dirname, "dist"), // Define output directory as 'dist'
+      filename: "[name].[contenthash].js", // Hash filenames for caching
+      publicPath: "/", // Ensures the assets are referenced correctly
     },
   },
 ]);
