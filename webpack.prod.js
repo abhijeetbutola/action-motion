@@ -18,9 +18,10 @@ module.exports = merge([
       ],
     },
     output: {
-      path: path.resolve(__dirname, "dist"), // Define output directory as 'dist'
-      filename: "[name].[contenthash].js", // Hash filenames for caching
-      publicPath: "/", // Ensures the assets are referenced correctly
+      // Define output directory as 'dist' (or 'build')
+      path: path.resolve(__dirname, "dist"),
+      filename: "[name].[contenthash].js", // Filename with content hash for caching
+      publicPath: "/", // Ensure assets are referenced correctly
     },
   },
 ]);

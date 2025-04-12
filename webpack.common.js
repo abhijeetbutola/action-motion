@@ -3,11 +3,12 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   entry: {
-    app: "./src/index.tsx",
+    app: "./src/index.tsx", // Entry point for your app
   },
   output: {
-    // filename: "app.js",
-    path: path.resolve(__dirname, "public"),
+    // Do not specify the output directory here.
+    filename: "bundle.js", // This can be overridden in webpack.prod.js for better control
+    publicPath: "/", // This ensures assets are referenced correctly
   },
   module: {
     rules: [
