@@ -11,17 +11,6 @@ import Button from "./Button";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-function isColliding(
-  a: { x: number; y: number },
-  b: { x: number; y: number },
-  threshold = 40
-) {
-  const dx = a.x - b.x;
-  const dy = a.y - b.y;
-  const distance = Math.sqrt(dx * dx + dy * dy);
-  return distance < threshold;
-}
-
 function PreviewArea() {
   const stopAllRef = useRef(false);
   const sprites = useSelector((state: RootState) => state.sprites.byId);
@@ -32,7 +21,8 @@ function PreviewArea() {
   const runSequenceForSprite = async (
     spriteId: string,
     sprite: Sprite,
-    actions: AnimationBlock[]
+    actions: AnimationBlock[],
+    spritePositions: Record<string, { x: number; y: number; rotation: number }>
   ) => {
     let currentX = sprite.x;
     let currentY = sprite.y;
@@ -49,19 +39,31 @@ function PreviewArea() {
         dispatch,
         currentX,
         currentY,
-        currentRotation
+        currentRotation,
+        spritePositions,
+        allIds
       );
 
       currentX = result.x;
       currentY = result.y;
       currentRotation = result.rotation;
 
+      spritePositions[spriteId] = {
+        x: currentX,
+        y: currentY,
+        rotation: currentRotation,
+      };
+
       if (action.id === "moveSteps") {
         for (const otherId of allIds) {
           if (otherId === spriteId) continue;
 
-          const other = sprites[otherId];
-          if (isColliding({ x: currentX, y: currentY }, other)) {
+          const other = spritePositions[otherId];
+          const dx = currentX - other.x;
+          const dy = currentY - other.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 40) {
             const thisActions = actionSets[spriteId] || [];
             const otherActions = actionSets[otherId] || [];
 
@@ -69,7 +71,7 @@ function PreviewArea() {
             dispatch(setActionSet(otherId, thisActions));
 
             console.log(
-              `💥 Collision detected between ${spriteId} and ${otherId}. Actions swapped.`
+              `💥 Collision detected between ${spriteId} and ${otherId}`
             );
           }
         }
@@ -82,10 +84,20 @@ function PreviewArea() {
 
   const handlePlayAll = async () => {
     stopAllRef.current = false;
+
+    const spritePositions: Record<
+      string,
+      { x: number; y: number; rotation: number }
+    > = {};
+    for (const id of allIds) {
+      const s = sprites[id];
+      spritePositions[id] = { x: s.x, y: s.y, rotation: s.rotation };
+    }
+
     const promises = allIds.map((id) => {
       const sprite = sprites[id];
       const actions = actionSets[id] || [];
-      return runSequenceForSprite(id, sprite, actions);
+      return runSequenceForSprite(id, sprite, actions, spritePositions);
     });
 
     await Promise.all(promises);

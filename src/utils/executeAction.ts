@@ -9,6 +9,17 @@ import { AppDispatch } from "../redux/store";
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
+function isColliding(
+  a: { x: number; y: number },
+  b: { x: number; y: number },
+  threshold = 40
+) {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+  return distance < threshold;
+}
+
 export const executeAction = async (
   action: AnimationBlock,
   spriteId: string,
@@ -17,7 +28,9 @@ export const executeAction = async (
   dispatch: AppDispatch,
   currentX: number,
   currentY: number,
-  currentRotation: number
+  currentRotation: number,
+  spritePositions?: Record<string, { x: number; y: number; rotation: number }>,
+  allIds?: string[]
 ): Promise<{ x: number; y: number; rotation: number }> => {
   switch (action.id) {
     case "moveSteps": {
@@ -35,25 +48,43 @@ export const executeAction = async (
           rotation: currentRotation,
         })
       );
+      if (spritePositions) {
+        spritePositions[spriteId] = {
+          x: newX,
+          y: newY,
+          rotation: currentRotation,
+        };
+      }
       return { x: newX, y: newY, rotation: currentRotation };
     }
 
     case "turnClockWiseDegrees": {
       const degrees = action.params?.degrees || 0;
       dispatch(turnSprite(spriteId, degrees));
-      return { x: currentX, y: currentY, rotation: currentRotation + degrees };
+      const updatedRotation = currentRotation + degrees;
+      if (spritePositions) {
+        spritePositions[spriteId].rotation = updatedRotation;
+      }
+      return { x: currentX, y: currentY, rotation: updatedRotation };
     }
 
     case "turnAntiClockWiseDegrees": {
       const degrees = action.params?.degrees || 0;
       dispatch(turnSprite(spriteId, -degrees));
-      return { x: currentX, y: currentY, rotation: currentRotation - degrees };
+      const updatedRotation = currentRotation - degrees;
+      if (spritePositions) {
+        spritePositions[spriteId].rotation = updatedRotation;
+      }
+      return { x: currentX, y: currentY, rotation: updatedRotation };
     }
 
     case "goToXY": {
       const x = action.params?.x ?? currentX;
       const y = action.params?.y ?? currentY;
       dispatch(updateSprite({ id: spriteId, x, y, rotation: currentRotation }));
+      if (spritePositions) {
+        spritePositions[spriteId] = { x, y, rotation: currentRotation };
+      }
       return { x, y, rotation: currentRotation };
     }
 
@@ -71,24 +102,39 @@ export const executeAction = async (
 
     case "repeat": {
       const times = parseInt(action.params?.times) || 1;
+      const repeatActions = actions.filter((a) => a.id !== "repeat");
+
       for (let i = 0; i < times; i++) {
-        for (const repeatAction of actions) {
-          if (repeatAction.id !== "repeat") {
-            const result = await executeAction(
-              repeatAction,
-              spriteId,
-              sprite,
-              actions,
-              dispatch,
-              currentX,
-              currentY,
-              currentRotation
-            );
-            currentX = result.x;
-            currentY = result.y;
-            currentRotation = result.rotation;
-            await delay(500);
+        for (const repeatAction of repeatActions) {
+          const result = await executeAction(
+            repeatAction,
+            spriteId,
+            sprite,
+            actions,
+            dispatch,
+            currentX,
+            currentY,
+            currentRotation,
+            spritePositions,
+            allIds
+          );
+          currentX = result.x;
+          currentY = result.y;
+          currentRotation = result.rotation;
+
+          if (repeatAction.id === "moveSteps" && spritePositions && allIds) {
+            for (const otherId of allIds) {
+              if (otherId === spriteId) continue;
+              const other = spritePositions[otherId];
+              if (isColliding({ x: currentX, y: currentY }, other)) {
+                console.log(
+                  `💥 Collision inside repeat between ${spriteId} and ${otherId}`
+                );
+              }
+            }
           }
+
+          await delay(500);
         }
       }
       return { x: currentX, y: currentY, rotation: currentRotation };
