@@ -41,7 +41,9 @@ function PreviewArea() {
         currentY,
         currentRotation,
         spritePositions,
-        allIds
+        allIds,
+        stopAllRef,
+        actionSets
       );
 
       currentX = result.x;

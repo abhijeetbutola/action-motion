@@ -1,4 +1,5 @@
 import { AnimationBlock } from "../animationBlocks";
+import { setActionSet } from "../redux/reducers/editorReducer";
 import { Sprite } from "../redux/reducers/spriteReducer";
 import {
   updateSprite,
@@ -30,7 +31,9 @@ export const executeAction = async (
   currentY: number,
   currentRotation: number,
   spritePositions?: Record<string, { x: number; y: number; rotation: number }>,
-  allIds?: string[]
+  allIds?: string[],
+  stopAllRef?: React.MutableRefObject<boolean>,
+  actionSets: Record<string, AnimationBlock[]> = {}
 ): Promise<{ x: number; y: number; rotation: number }> => {
   switch (action.id) {
     case "moveSteps": {
@@ -105,7 +108,15 @@ export const executeAction = async (
       const repeatActions = actions.filter((a) => a.id !== "repeat");
 
       for (let i = 0; i < times; i++) {
+        if (stopAllRef?.current) break;
+
+        if (!spritePositions) {
+          throw new Error("spritePositions is undefined");
+        }
+
         for (const repeatAction of repeatActions) {
+          if (stopAllRef?.current) break;
+
           const result = await executeAction(
             repeatAction,
             spriteId,
@@ -118,9 +129,16 @@ export const executeAction = async (
             spritePositions,
             allIds
           );
+
           currentX = result.x;
           currentY = result.y;
           currentRotation = result.rotation;
+
+          spritePositions[spriteId] = {
+            x: currentX,
+            y: currentY,
+            rotation: currentRotation,
+          };
 
           if (repeatAction.id === "moveSteps" && spritePositions && allIds) {
             for (const otherId of allIds) {
@@ -130,11 +148,18 @@ export const executeAction = async (
                 console.log(
                   `💥 Collision inside repeat between ${spriteId} and ${otherId}`
                 );
+
+                const thisActions = actionSets[spriteId] || [];
+                const otherActions = actionSets[otherId] || [];
+
+                dispatch(setActionSet(spriteId, otherActions));
+                dispatch(setActionSet(otherId, thisActions));
               }
             }
           }
 
           await delay(500);
+          if (stopAllRef?.current) break;
         }
       }
       return { x: currentX, y: currentY, rotation: currentRotation };
